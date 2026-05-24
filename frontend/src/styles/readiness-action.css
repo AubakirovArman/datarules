@@ -1,0 +1,49 @@
+.readiness-action-plan {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.readiness-action {
+  background: rgba(2, 9, 12, 0.74);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  color: var(--text-main);
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  min-height: 78px;
+  padding: 9px;
+  text-align: left;
+  text-transform: none;
+  width: 100%;
+}
+
+.readiness-action.blocker {
+  border-color: rgba(255, 77, 109, 0.52);
+}
+
+.readiness-action.warning {
+  border-color: rgba(0, 240, 255, 0.5);
+}
+
+.readiness-action.ready {
+  border-color: rgba(0, 255, 136, 0.58);
+}
+
+.readiness-action strong {
+  color: var(--text-main);
+  font-family: Orbitron, Rajdhani, sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.readiness-action small {
+  color: var(--text-dim);
+}
+
+.readiness-action span {
+  color: var(--matrix-green);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+}

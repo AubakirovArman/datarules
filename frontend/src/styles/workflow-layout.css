@@ -1,0 +1,260 @@
+.workspace {
+  min-inline-size: 0;
+  container: inline-size / workspace;
+}
+
+.settings-drawer,
+.stage-console,
+.workflow-inspector {
+  background: rgba(5, 15, 20, 0.78);
+  border: 1px solid rgba(0, 240, 255, 0.36);
+  border-radius: 3px;
+  box-shadow:
+    0 0 12px rgba(0, 240, 255, 0.15),
+    inset 0 0 22px rgba(0, 217, 255, 0.06);
+}
+
+.settings-drawer {
+  order: 6;
+}
+
+.settings-drawer > summary,
+.workflow-inspector > summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+.settings-drawer > summary::-webkit-details-marker,
+.workflow-inspector > summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-drawer > summary span,
+.workflow-inspector > summary strong {
+  color: var(--text-main);
+  font-family: Orbitron, Rajdhani, sans-serif;
+  text-transform: uppercase;
+}
+
+.settings-drawer > summary small,
+.workflow-inspector > summary small {
+  color: var(--text-dim);
+  margin-inline-start: auto;
+}
+
+.settings-drawer .settings-panel {
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
+.workflow-strip {
+  margin: 0;
+}
+
+.steps {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.step {
+  min-inline-size: 0;
+}
+
+.step span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workflow-action,
+.workflow-inspector,
+.stage-console,
+.guided-stage > .panel,
+.flow-stack {
+  margin-inline: auto;
+  max-inline-size: 1180px;
+  inline-size: 100%;
+}
+
+.workflow-inspector {
+  overflow: clip;
+  margin-block-start: 16px;
+}
+
+.workflow-inspector > summary {
+  border-block-end: 1px solid transparent;
+}
+
+.workflow-inspector[open] > summary {
+  border-block-end-color: rgba(0, 240, 255, 0.18);
+}
+
+.inspector-stack {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.inspector-stack > * {
+  margin: 0;
+  max-inline-size: none;
+}
+
+.stage-console {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.stage-console-head {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.stage-console-head h2 {
+  color: var(--text-main);
+  font-family: Orbitron, Rajdhani, sans-serif;
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.stage-console-head p {
+  color: var(--text-dim);
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.guided-tabs {
+  background: rgba(2, 9, 12, 0.62);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin: 0;
+}
+
+.guided-tabs button {
+  justify-content: start;
+  min-inline-size: 0;
+  position: relative;
+}
+
+.guided-tabs button::before {
+  color: var(--text-dim);
+  content: attr(data-index);
+  font-family: "JetBrains Mono", monospace;
+  margin-inline-end: 2px;
+}
+
+.guided-tabs button[aria-current="step"]::before {
+  color: var(--matrix-green);
+}
+
+.stage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.stage-actions button {
+  min-inline-size: 128px;
+}
+
+.guided-stage {
+  min-block-size: 520px;
+  min-inline-size: 0;
+}
+
+.summary-title,
+.page-list span {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+
+.summary-title strong {
+  flex: 1 1 240px;
+  min-inline-size: 0;
+}
+
+.summary-title small {
+  margin-inline-start: 0;
+}
+
+.summary-card p,
+.ai-summary-list span,
+.page-list span {
+  overflow-wrap: anywhere;
+}
+
+.metric-row {
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+}
+
+.upload-zone {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(0, 255, 198, 0.04)),
+    rgba(2, 9, 12, 0.82);
+  border: 1px dashed rgba(0, 255, 198, 0.62);
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  margin-block-end: 14px;
+  min-block-size: 138px;
+  padding: 18px;
+  text-align: center;
+}
+
+.upload-zone:focus-visible,
+.upload-zone:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.22);
+  outline: none;
+}
+
+.upload-zone.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.upload-zone strong {
+  color: var(--neon-cyan);
+  font-family: Orbitron, Rajdhani, sans-serif;
+  text-transform: uppercase;
+}
+
+.upload-zone span {
+  color: var(--text-dim);
+  max-inline-size: 560px;
+}
+
+@container workspace (inline-size < 820px) {
+  .workflow-action,
+  .stage-console-head,
+  .readiness-body,
+  .decision-head {
+    grid-template-columns: 1fr;
+  }
+
+  .runtime,
+  .settings-drawer > summary small,
+  .workflow-inspector > summary small {
+    inline-size: 100%;
+    margin-inline-start: 0;
+  }
+
+  .product-topbar,
+  .topbar {
+    align-items: stretch;
+  }
+}

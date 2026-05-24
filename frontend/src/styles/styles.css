@@ -1,0 +1,238 @@
+:root {
+  color-scheme: light;
+  font-family:
+    "Inter var", Inter, "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background: #eef3f8;
+  color: #17202d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  align-items: center;
+  background: #1769aa;
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+input,
+textarea,
+select {
+  background: #fff;
+  border: 1px solid #c9d6e4;
+  border-radius: 6px;
+  color: #18202f;
+  outline: none;
+  padding: 9px 10px;
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.product-shell,
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: #101c2d;
+  color: #f6f8fb;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+}
+
+.pane-title,
+.panel-head,
+.toolbar,
+.job-meta,
+.runtime {
+  align-items: center;
+  display: flex;
+}
+
+.pane-title {
+  gap: 9px;
+  justify-content: space-between;
+}
+
+.dataset-form {
+  display: grid;
+  gap: 9px;
+}
+
+.dataset-list {
+  display: grid;
+  gap: 8px;
+  overflow: auto;
+}
+
+.dataset-row {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  justify-content: space-between;
+  min-height: 48px;
+  text-align: left;
+}
+
+.dataset-row.active {
+  background: #214f6f;
+  border-color: #72c7d4;
+}
+
+.workspace {
+  display: grid;
+  gap: 18px;
+  padding: 18px clamp(14px, 2vw, 28px) 28px;
+}
+
+.topbar {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  padding: 16px clamp(14px, 2vw, 28px);
+}
+
+.topbar h1 {
+  font-size: 28px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.topbar p {
+  color: #536173;
+  margin: 5px 0 0;
+}
+
+.runtime {
+  background: #fff;
+  border: 1px solid #d7e3ee;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  gap: 8px;
+  min-width: 300px;
+  padding: 10px 12px;
+}
+
+.product-topbar {
+  background: rgba(2, 9, 12, 0.9);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.32);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+
+.brand-block {
+  min-width: min(100%, 320px);
+}
+
+.app-nav {
+  display: flex;
+  flex: 1 1 300px;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  min-width: 0;
+}
+
+.app-nav button.active {
+  border-color: var(--neon-teal, #00cfa8);
+}
+
+.compact-runtime {
+  min-width: min(100%, 360px);
+}
+
+.compact-runtime label {
+  display: grid;
+  gap: 4px;
+  min-width: min(100%, 180px);
+}
+
+.dataset-page .sidebar {
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  min-height: auto;
+}
+
+.runtime span,
+.runtime small,
+.event-row small,
+.schema-table small {
+  color: #607086;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(340px, 1fr) minmax(340px, 1fr);
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #d7e3ee;
+  border-radius: 8px;
+  box-shadow: 0 14px 35px rgba(20, 35, 55, 0.05);
+  min-height: 260px;
+  padding: 16px;
+}
+
+.panel-head {
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.panel h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.toolbar {
+  gap: 8px;
+}
+
+@media (max-width: 980px) {
+  .app-shell,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    min-height: auto;
+  }
+
+  .topbar {
+    flex-direction: column;
+  }
+}

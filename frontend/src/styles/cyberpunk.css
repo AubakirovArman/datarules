@@ -1,0 +1,298 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg-main: #05090b;
+  --bg-panel: rgba(8, 19, 26, 0.78);
+  --bg-panel-strong: rgba(2, 9, 12, 0.92);
+  --neon-cyan: #00f0ff;
+  --neon-teal: #00ffc6;
+  --matrix-green: #00ff88;
+  --line-glow: #00d9ff;
+  --soft-glow: #4dffff;
+  --text-main: #b8fff9;
+  --text-dim: #5fd9d0;
+  --warning: #ff4d6d;
+  --success: #00ff88;
+  color-scheme: dark;
+  font-family: Rajdhani, "Exo 2", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+body {
+  background:
+    linear-gradient(90deg, rgba(0, 240, 255, 0.05), transparent 35%, rgba(0, 255, 198, 0.04)),
+    linear-gradient(145deg, #020405 0%, #071014 48%, #05090b 100%);
+  min-height: 100vh;
+}
+
+body::before {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 100% 3px;
+  content: "";
+  inset: 0;
+  opacity: 0.45;
+  pointer-events: none;
+  position: fixed;
+  z-index: 20;
+}
+
+body::after {
+  background:
+    linear-gradient(90deg, transparent 0 49%, rgba(0, 240, 255, 0.06) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 0 49%, rgba(0, 255, 198, 0.035) 50%, transparent 51%);
+  background-size: 72px 72px;
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+}
+
+.product-shell,
+.app-shell {
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.05), transparent 38%);
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar,
+.panel,
+.workflow-strip,
+.guided-tabs,
+.runtime,
+.proposal-box {
+  backdrop-filter: blur(10px);
+  background: var(--bg-panel);
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  box-shadow:
+    0 0 5px rgba(0, 240, 255, 0.65),
+    0 0 18px rgba(0, 240, 255, 0.18),
+    inset 0 0 22px rgba(0, 217, 255, 0.08);
+}
+
+.sidebar {
+  border-width: 0 1px 0 0;
+}
+
+.panel,
+.workflow-strip,
+.guided-tabs,
+.runtime {
+  border-radius: 3px;
+  position: relative;
+}
+
+.panel::before,
+.workflow-strip::before,
+.runtime::before {
+  border-left: 2px solid var(--neon-teal);
+  border-top: 2px solid var(--neon-teal);
+  content: "";
+  height: 18px;
+  left: -1px;
+  position: absolute;
+  top: -1px;
+  width: 18px;
+}
+
+.topbar h1,
+.panel h2,
+.pane-title,
+.workflow-title {
+  color: var(--neon-cyan);
+  font-family: Orbitron, Michroma, Rajdhani, sans-serif;
+  letter-spacing: 0;
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.72);
+  text-transform: uppercase;
+}
+
+.topbar p,
+.runtime span,
+.runtime small,
+.metric span,
+.page-list span,
+.table-head,
+.event-row small,
+.schema-table small,
+.hit p,
+.empty,
+.panel-hint,
+.job-meta,
+.connection-card small,
+.connection-card span,
+.document-picker small,
+.review-card label span,
+.review-card small {
+  color: var(--text-dim);
+}
+
+button {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.62);
+  border-radius: 2px;
+  color: var(--text-main);
+  font-family: Rajdhani, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+}
+
+button:hover:not(:disabled),
+.guided-tabs button.active,
+.segmented button.active,
+.dataset-row.active {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: var(--neon-teal);
+  color: #ffffff;
+  box-shadow:
+    0 0 5px var(--neon-cyan),
+    0 0 15px rgba(0, 240, 255, 0.55),
+    0 0 30px rgba(0, 240, 255, 0.24);
+}
+
+.icon-button,
+.segmented button,
+.guided-tabs button {
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--text-dim);
+}
+
+input,
+textarea,
+select,
+.review-card select,
+.lang-select {
+  background: rgba(2, 4, 5, 0.86);
+  border: 1px solid rgba(0, 240, 255, 0.42);
+  border-radius: 2px;
+  color: var(--text-main);
+  box-shadow: inset 0 0 12px rgba(0, 217, 255, 0.1);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--neon-teal);
+  box-shadow:
+    0 0 12px rgba(0, 255, 198, 0.28),
+    inset 0 0 14px rgba(0, 217, 255, 0.16);
+}
+
+.table-row,
+.event-row,
+.hit,
+.connection-form {
+  border-color: rgba(0, 217, 255, 0.2);
+}
+
+.summary-card,
+.review-card,
+.schema-table,
+.connection-card,
+.document-picker,
+.issue-list,
+.preview-table,
+.metric,
+.ai-summary-list,
+.chat-bubble,
+.step {
+  background: rgba(5, 15, 20, 0.74);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 2px;
+  box-shadow: inset 0 0 18px rgba(0, 217, 255, 0.055);
+}
+
+.summary-card p,
+.schema-summary,
+.ai-summary-list span,
+.summary-card strong,
+.schema-table li,
+.table-row,
+.review-head,
+.connection-card strong {
+  color: var(--text-main);
+}
+
+.ai-summary-label,
+.schema-table li span,
+.proposal-box strong,
+.metric strong {
+  color: var(--neon-teal);
+  text-shadow: 0 0 10px rgba(0, 255, 198, 0.55);
+}
+
+.progress-line {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 2px;
+}
+
+.progress-line div {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--matrix-green));
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.55);
+}
+
+.status {
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  color: var(--text-main);
+  font-family: "JetBrains Mono", "IBM Plex Mono", monospace;
+}
+
+.status.running {
+  background: rgba(0, 240, 255, 0.14);
+  color: var(--neon-cyan);
+}
+
+.status.waiting_review,
+.status.completed,
+.status.needs_confirmation,
+.status.loaded,
+.step.done {
+  background: rgba(0, 255, 136, 0.12);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.status.failed,
+.status.blocked,
+.issue-list .error,
+.icon-button.danger {
+  background: rgba(255, 77, 109, 0.12);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.issue-list .warning {
+  background: rgba(255, 221, 87, 0.1);
+  color: #ffe66d;
+}
+
+.issue-list .ok {
+  background: rgba(0, 255, 136, 0.12);
+  color: var(--success);
+}
+
+.chat-bubble.user {
+  background: rgba(0, 240, 255, 0.12);
+}
+
+.chat-bubble.assistant {
+  background: rgba(0, 255, 198, 0.1);
+}
+
+.proposal-box,
+.agent-json,
+code,
+.preview-row small {
+  font-family: "JetBrains Mono", "Share Tech Mono", "Fira Code", monospace;
+}
+
+.error-banner {
+  background: rgba(255, 77, 109, 0.12);
+  border-color: rgba(255, 77, 109, 0.65);
+  color: #ffd6df;
+  box-shadow: 0 0 18px rgba(255, 77, 109, 0.18);
+}

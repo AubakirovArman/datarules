@@ -1,0 +1,285 @@
+.workflow-strip {
+  background: #fff;
+  border: 1px solid #d7e3ee;
+  border-radius: 8px;
+  box-shadow: 0 14px 35px rgba(20, 35, 55, 0.05);
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.workflow-title {
+  color: #536173;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(6, minmax(105px, 1fr));
+}
+
+.step {
+  align-items: center;
+  background: #f4f7fb;
+  border: 1px solid #e1e9f1;
+  border-radius: 8px;
+  color: #617086;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 18px 18px 1fr;
+  min-height: 42px;
+  padding: 8px;
+}
+
+.step.done {
+  background: #e9f7f4;
+  border-color: #78c7b2;
+  color: #17624f;
+}
+
+.summary-list,
+.page-list,
+.chat-log {
+  display: grid;
+  gap: 9px;
+}
+
+.summary-card {
+  border: 1px solid #e4ebf3;
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.summary-title,
+.page-list span {
+  align-items: center;
+  display: flex;
+  gap: 7px;
+}
+
+.summary-title small {
+  color: #607086;
+  margin-left: auto;
+}
+
+.summary-card p {
+  color: #38475a;
+  margin: 0;
+}
+
+.metric-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.metric {
+  background: #f5f8fb;
+  border-radius: 7px;
+  padding: 8px;
+}
+
+.metric strong,
+.metric span {
+  display: block;
+}
+
+.metric span,
+.page-list span {
+  color: #607086;
+  font-size: 12px;
+}
+
+.chat-panel {
+  min-height: 360px;
+}
+
+.chat-log {
+  margin-bottom: 10px;
+  min-height: 80px;
+}
+
+.chat-bubble {
+  border-radius: 8px;
+  max-width: 92%;
+  padding: 10px 12px;
+}
+
+.chat-bubble.user {
+  background: #e8f1fb;
+  justify-self: end;
+}
+
+.chat-bubble.assistant {
+  background: #eef8f3;
+  justify-self: start;
+}
+
+.chat-form {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr auto;
+}
+
+.proposal-box {
+  background: #101c2d;
+  border-radius: 8px;
+  color: #f7fbff;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 12px;
+}
+
+.proposal-box code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  max-height: 190px;
+  overflow: auto;
+  padding: 9px;
+  white-space: pre-wrap;
+}
+
+.guided-tabs {
+  background: #fff;
+  border: 1px solid #d7e3ee;
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 6px;
+}
+
+.guided-tabs button {
+  background: transparent;
+  color: #536173;
+  justify-content: center;
+}
+
+.guided-tabs button.active {
+  background: #1769aa;
+  color: #fff;
+}
+
+.guided-stage {
+  min-height: 520px;
+}
+
+.stage-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.guided-stage > .panel,
+.flow-stack {
+  margin: 0 auto;
+  max-width: 1120px;
+}
+
+.flow-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.readiness-panel {
+  border: 1px solid rgba(0, 240, 255, 0.36);
+  border-radius: 8px;
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.13);
+  display: grid;
+  gap: 12px;
+  margin: 0 auto 14px;
+  max-width: 1120px;
+  padding: 13px;
+}
+
+.readiness-head,
+.readiness-body,
+.readiness-stage {
+  align-items: center;
+  display: flex;
+  gap: 9px;
+}
+
+.readiness-head {
+  justify-content: space-between;
+}
+
+.readiness-head strong,
+.readiness-body strong,
+.readiness-stage strong {
+  color: var(--text-main);
+}
+
+.readiness-meter {
+  background: rgba(0, 240, 255, 0.09);
+  border-radius: 999px;
+  height: 5px;
+  overflow: hidden;
+}
+
+.readiness-meter span {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--matrix-green));
+  display: block;
+  height: 100%;
+}
+
+.readiness-stages {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+}
+
+.readiness-stage {
+  background: rgba(5, 15, 20, 0.72);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: 8px;
+  flex-wrap: wrap;
+  padding: 9px;
+}
+
+.readiness-stage.ready svg,
+.readiness-stage.ready small {
+  color: var(--success);
+}
+
+.readiness-stage.attention svg,
+.readiness-stage.blocked svg,
+.readiness-stage.blocked small {
+  color: var(--warning);
+}
+
+.readiness-stage.pending svg,
+.readiness-stage.pending small {
+  color: var(--text-dim);
+}
+
+.readiness-stage small,
+.readiness-body small {
+  color: var(--text-dim);
+}
+
+.readiness-body {
+  align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.readiness-body > div {
+  display: grid;
+  gap: 6px;
+}
+
+@media (max-width: 980px) {
+  .steps,
+  .metric-row,
+  .guided-tabs,
+  .readiness-stages,
+  .readiness-body {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,0 +1,70 @@
+.panel-head,
+.toolbar,
+.review-actions,
+.route-summary-metrics,
+.table-catalog-strip,
+.runtime {
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+
+button,
+.status,
+.metric,
+.connection-card,
+.review-card,
+.summary-card,
+.ai-summary-list,
+.readiness-stage,
+.workflow-action-stats span {
+  min-inline-size: 0;
+}
+
+button span,
+.status,
+.workflow-title,
+.connection-card strong,
+.connection-card small,
+.connection-card code,
+.summary-title strong,
+.review-head strong,
+.guided-tabs button {
+  overflow-wrap: anywhere;
+}
+
+.connection-card {
+  grid-template-columns: 22px minmax(220px, 1fr);
+}
+
+.connection-card > span,
+.connection-card > button {
+  justify-self: start;
+}
+
+.file-table,
+.search-results,
+.review-list,
+.summary-list,
+.load-preview {
+  min-inline-size: 0;
+}
+
+.table-head,
+.table-row {
+  grid-template-columns: minmax(180px, 2fr) minmax(110px, 1fr) minmax(150px, 0.9fr);
+}
+
+.row-actions {
+  flex-wrap: wrap;
+}
+
+@container workspace (inline-size < 820px) {
+  .panel-head,
+  .chat-form,
+  .search-form,
+  .load-controls,
+  .table-head,
+  .table-row {
+    grid-template-columns: 1fr;
+  }
+}

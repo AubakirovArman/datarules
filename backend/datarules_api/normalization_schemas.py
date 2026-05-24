@@ -1,0 +1,38 @@
+DEFAULT_COLUMNS = {
+    "investment_projects": [
+        ("project_name", "text", True),
+        ("company_name", "text", False),
+        ("sector", "text", False),
+        ("region", "text", False),
+        ("status", "text", False),
+        ("start_date", "date", False),
+        ("end_date", "date", False),
+        ("amount", "numeric", False),
+        ("currency", "text", False),
+        ("description", "text", False),
+    ],
+    "project_financials": [
+        ("project_name", "text", False),
+        ("company_name", "text", False),
+        ("year", "integer", False),
+        ("quarter", "text", False),
+        ("metric_name", "text", False),
+        ("amount", "numeric", False),
+        ("currency", "text", False),
+        ("unit", "text", False),
+    ],
+    "project_milestones": [
+        ("project_name", "text", False),
+        ("milestone_name", "text", True),
+        ("planned_date", "date", False),
+        ("actual_date", "date", False),
+        ("status", "text", False),
+    ],
+    "companies": [
+        ("company_name", "text", True),
+        ("role", "text", False),
+        ("sector", "text", False),
+        ("country", "text", False),
+        ("description", "text", False),
+    ],
+}

@@ -1,0 +1,43 @@
+.structured-sql {
+  border: 1px solid rgba(0, 240, 255, 0.24);
+  display: grid;
+  gap: 9px;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+
+.structured-sql textarea {
+  min-height: 78px;
+}
+
+.sql-result {
+  display: grid;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.sql-table {
+  display: grid;
+  min-width: 560px;
+}
+
+.sql-row {
+  border-top: 1px solid rgba(0, 217, 255, 0.18);
+  display: grid;
+  gap: 8px;
+  grid-auto-columns: minmax(130px, 1fr);
+  grid-auto-flow: column;
+  padding: 7px 0;
+}
+
+.sql-row span {
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.sql-row.head strong {
+  color: var(--neon-teal);
+  font-family: "JetBrains Mono", "Share Tech Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+}

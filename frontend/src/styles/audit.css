@@ -1,0 +1,94 @@
+.audit-trail {
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+
+.audit-head,
+.audit-head strong,
+.audit-event {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.audit-head {
+  justify-content: space-between;
+}
+
+.audit-event {
+  border-top: 1px solid rgba(0, 240, 255, 0.14);
+  justify-content: space-between;
+  padding-top: 7px;
+}
+
+.audit-event span {
+  color: var(--text-main);
+  font-family: "JetBrains Mono", "Share Tech Mono", monospace;
+}
+
+.audit-event small,
+.audit-trail > small {
+  color: var(--text-dim);
+}
+
+.runtime-diagnostics {
+  border: 1px solid rgba(0, 240, 255, 0.24);
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+}
+
+.diagnostics-head,
+.diagnostics-head strong,
+.diagnostic-check {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.diagnostics-head {
+  justify-content: space-between;
+}
+
+.diagnostics-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.diagnostic-check {
+  background: rgba(5, 15, 20, 0.62);
+  border: 1px solid rgba(0, 240, 255, 0.16);
+  padding: 8px;
+}
+
+.diagnostic-check.ok svg {
+  color: var(--success);
+}
+
+.diagnostic-check.warning svg,
+.diagnostic-check.failed svg {
+  color: var(--warning);
+}
+
+.diagnostic-check.disabled svg,
+.diagnostic-check small,
+.diagnostic-check code {
+  color: var(--text-dim);
+}
+
+.diagnostic-check strong,
+.diagnostics-head strong {
+  color: var(--text-main);
+}
+
+.diagnostic-check code {
+  display: block;
+  font-size: 11px;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

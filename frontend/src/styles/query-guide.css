@@ -1,0 +1,11 @@
+.query-guide {
+  border: 1px solid rgba(0, 240, 255, 0.24);
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+
+.query-guide .ai-summary-list {
+  grid-template-columns: 1fr;
+}

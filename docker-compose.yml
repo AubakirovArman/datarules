@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: paradedb/paradedb:latest
+    container_name: datarules-postgres
+    environment:
+      POSTGRES_DB: datarules
+      POSTGRES_USER: datarules
+      POSTGRES_PASSWORD: datarules
+    ports:
+      - "${POSTGRES_PORT:-55433}:5432"
+    volumes:
+      - datarules_postgres:/var/lib/postgresql
+
+  redis:
+    image: redis:7
+    container_name: datarules-redis
+    ports:
+      - "${REDIS_PORT:-6381}:6379"
+
+  minio:
+    image: minio/minio:latest
+    container_name: datarules-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: datarules
+      MINIO_ROOT_PASSWORD: datarules-password
+    ports:
+      - "${MINIO_API_PORT:-9900}:9000"
+      - "${MINIO_CONSOLE_PORT:-9901}:9001"
+    volumes:
+      - datarules_minio:/data
+
+volumes:
+  datarules_postgres:
+  datarules_minio:

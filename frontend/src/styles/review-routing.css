@@ -1,0 +1,113 @@
+.review-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.load-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-actions > span {
+  border: 1px solid rgba(0, 240, 255, 0.26);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
+.route-pair,
+.route-summary {
+  background: rgba(0, 240, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: 2px;
+  display: grid;
+  gap: 6px;
+  padding: 9px;
+}
+
+.route-pair span,
+.route-summary strong {
+  color: var(--neon-teal);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.route-pair strong {
+  color: var(--text-main);
+  overflow-wrap: anywhere;
+}
+
+.route-summary p {
+  color: var(--text-main);
+  margin: 0;
+}
+
+.route-summary-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.route-summary-metrics span,
+.issue-list span small {
+  color: var(--text-dim);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+}
+
+.issue-list span {
+  display: grid;
+  gap: 3px;
+}
+
+.extraction-document-row {
+  color: var(--text-dim);
+  display: grid;
+  gap: 6px;
+}
+
+.extraction-runs {
+  border-left: 1px solid rgba(0, 240, 255, 0.25);
+  margin-top: 4px;
+  padding-left: 8px;
+}
+
+.extraction-runs span {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.extraction-diff {
+  border: 1px solid rgba(0, 255, 198, 0.22);
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+}
+
+.diff-head,
+.diff-change {
+  display: grid;
+  gap: 5px;
+}
+
+.diff-head {
+  grid-template-columns: 1fr auto;
+}
+
+.diff-change p {
+  color: var(--text-main);
+  margin: 0;
+}
+
+.mini-metric {
+  display: grid;
+  gap: 2px;
+}

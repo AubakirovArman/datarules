@@ -1,0 +1,79 @@
+.panel,
+.workflow-strip,
+.sidebar {
+  animation: rise-in 260ms ease both;
+}
+
+.table-row,
+.event-row,
+.review-card,
+.summary-card,
+.hit,
+.chat-bubble {
+  animation: fade-slide 180ms ease both;
+}
+
+.step.done svg:first-child {
+  animation: pop 220ms ease both;
+}
+
+button,
+.dataset-row,
+.summary-card,
+.review-card {
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+button:hover:not(:disabled),
+.dataset-row:hover,
+.summary-card:hover,
+.review-card:hover {
+  transform: translateY(-1px);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
