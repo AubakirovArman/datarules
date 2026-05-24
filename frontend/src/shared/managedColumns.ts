@@ -11,6 +11,8 @@ const managedColumns = new Set([
   "field_sources",
   "metadata",
   "created_at",
+  "document_id",
+  "block_id",
 ]);
 
 export function isDataRulesManagedColumn(value: string) {

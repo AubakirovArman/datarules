@@ -41,8 +41,8 @@ export function SimpleDestinationPanel({ flow, onStep }: Props) {
     if (!flow.datasetId) return;
     setBusy("preview");
     try {
-      await prepareAiPlan(flow, mode);
       const target = mode === "analysis_only" ? "analysis_only" : table.trim();
+      await prepareAiPlan(flow, mode, target);
       const next = await flow.onCreateLoadPlan(
         connectionId || undefined,
         schema || "public",
@@ -190,9 +190,17 @@ function loadBlocker(plan: LoadPlan) {
     | undefined;
 }
 
-async function prepareAiPlan(flow: SimpleFlowProps, mode: DestinationMode) {
-  if (flow.datasetId && flow.reviews.some((review) => review.status !== "confirmed")) {
+async function prepareAiPlan(flow: SimpleFlowProps, mode: DestinationMode, targetTable: string) {
+  if (flow.datasetId && mode === "analysis_only" && flow.reviews.some((review) => review.status !== "confirmed")) {
     await api.acceptRecommendedReviews(flow.datasetId);
+    await flow.onRefreshReviews();
+  }
+  if (mode !== "analysis_only") {
+    await Promise.all(flow.reviews.map((review) => {
+      const docType = review.selected_doc_type ?? review.doc_type_options[0]?.value ?? "document";
+      if (review.status === "confirmed" && review.selected_table === targetTable) return Promise.resolve();
+      return flow.onConfirmReview(review.id, docType, targetTable, "Simple flow target selected by user");
+    }));
     await flow.onRefreshReviews();
   }
   const proposal = flow.proposals.find((item) => item.status === "approved") ?? flow.proposals[0];
