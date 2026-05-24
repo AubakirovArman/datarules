@@ -149,3 +149,10 @@ not use that fallback for production data.
 
 Every extracted block is stored with document, page/sheet/slide context,
 confidence, and canonical JSON under `storage/canonical`.
+
+## License
+
+DataRules is free for private and non-commercial use.
+
+Commercial use requires a separate paid written license from the copyright
+holder. See [LICENSE](LICENSE) for the full terms.

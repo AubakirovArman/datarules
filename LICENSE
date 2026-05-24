@@ -1,0 +1,56 @@
+DataRules Non-Commercial License v1.0
+
+Copyright (c) 2026 AubakirovArman
+
+1. Grant for Private and Non-Commercial Use
+
+Subject to this license, you may use, copy, run, modify, and study the
+DataRules software for private, personal, educational, research, or other
+non-commercial purposes free of charge.
+
+2. Commercial Use Requires a Paid License
+
+Commercial use is not permitted under this license. Commercial use includes,
+without limitation:
+
+- use by or for a business, company, government, or other commercial entity;
+- use to provide a paid or revenue-generating product, service, SaaS, API, or
+  consulting work;
+- resale, sublicensing, hosting, managed-service use, or distribution as part
+  of a commercial offering;
+- use that directly supports commercial operations, production workloads,
+  internal business processes, or customer deliverables.
+
+To use DataRules commercially, you must obtain a separate written commercial
+license from the copyright holder.
+
+3. Redistribution
+
+You may redistribute the software for non-commercial purposes only if you keep
+this license, copyright notices, and all source attribution intact. You may not
+remove or alter licensing notices.
+
+4. No Trademark Grant
+
+This license does not grant rights to use the DataRules name, logo, branding,
+or trademarks except as needed to identify the software.
+
+5. Third-Party Components
+
+Third-party dependencies, models, libraries, datasets, and services used with
+DataRules remain governed by their own licenses and terms. You are responsible
+for complying with those terms.
+
+6. No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING
+FROM THE SOFTWARE OR THE USE OF THE SOFTWARE.
+
+7. Termination
+
+Any use outside the permissions granted by this license automatically
+terminates your rights under this license. Commercial rights may only be
+granted by a separate written commercial agreement.
