@@ -11,12 +11,14 @@ type Props = {
   disabled: boolean;
   onSearch: (query: string) => Promise<SearchHit[]>;
   onAsk: (query: string) => Promise<AskResponse>;
+  simple?: boolean;
+  suggestions?: string[];
   t: (key: string) => string;
 };
 
 type SearchMode = "ask" | "expert" | "debug";
 
-export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
+export function SearchPane({ datasetId, disabled, onSearch, onAsk, simple = false, suggestions = [], t }: Props) {
   const [mode, setMode] = useState<SearchMode>("ask");
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<SearchHit[]>([]);
@@ -65,29 +67,34 @@ export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
   return (
     <section className="panel search-panel">
       <div className="panel-head">
-        <h2>{t("search")}</h2>
+        <h2>{simple ? t("askYourData") : t("search")}</h2>
       </div>
-      <div className="segmented">
+      {!simple && <div className="segmented">
         <button className={mode === "ask" ? "active" : ""} onClick={() => setMode("ask")} type="button">{t("askAgent")}</button>
         <button className={mode === "expert" ? "active" : ""} onClick={() => setMode("expert")} type="button">{t("structuredSql")}</button>
         <button className={mode === "debug" ? "active" : ""} onClick={() => setMode("debug")} type="button">Debug</button>
-      </div>
-      {mode !== "debug" && <QueryGuide datasetId={datasetId} t={t} />}
-      {(mode === "expert" || mode === "debug") && <StructuredSqlPane datasetId={datasetId} disabled={disabled} t={t} />}
-      {mode === "debug" && <GoldenChecksPanel datasetId={datasetId} checks={golden} disabled={disabled || busy} onChange={setGolden} t={t} />}
-      <form className="search-form" onSubmit={(event) => submit(event, mode === "ask" ? "ask" : "search")}>
+      </div>}
+      {!simple && mode !== "debug" && <QueryGuide datasetId={datasetId} t={t} />}
+      {!simple && (mode === "expert" || mode === "debug") && <StructuredSqlPane datasetId={datasetId} disabled={disabled} t={t} />}
+      {!simple && mode === "debug" && <GoldenChecksPanel datasetId={datasetId} checks={golden} disabled={disabled || busy} onChange={setGolden} t={t} />}
+      {simple && suggestions.length > 0 && (
+        <div className="simple-chip-row">
+          {suggestions.map((item) => <button className="ghost-button" onClick={() => setQuery(item)} type="button" key={item}>{item}</button>)}
+        </div>
+      )}
+      <form className="search-form" onSubmit={(event) => submit(event, simple || mode === "ask" ? "ask" : "search")}>
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("searchPlaceholder")} />
         <button disabled={disabled || busy || !query.trim()} type="submit">
           <Search size={16} />
-          <span>{mode === "ask" ? t("askAgent") : t("search")}</span>
+          <span>{simple || mode === "ask" ? t("askAgent") : t("search")}</span>
         </button>
-        {mode !== "ask" && (
+        {!simple && mode !== "ask" && (
           <button disabled={disabled || busy || !query.trim()} onClick={(event) => submit(event, "ask")} type="button">
             <Search size={16} />
             <span>{t("askAgent")}</span>
           </button>
         )}
-        {mode === "ask" && (
+        {!simple && mode === "ask" && (
           <button disabled={disabled || busy || !query.trim()} onClick={(event) => submit(event, "search")} type="button">
           <Search size={16} />
             <span>{t("search")}</span>
@@ -96,12 +103,12 @@ export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
       </form>
       {answer && (
         <div className="ai-summary-list">
-          <strong>{t("answer")} · {answer.confidence} · {answer.model_source} · {answer.prompt_version}</strong>
+          <strong>{simple ? t("answer") : `${t("answer")} · ${answer.confidence} · ${answer.model_source} · ${answer.prompt_version}`}</strong>
           <span>{answer.answer}</span>
-          {mode === "debug" && <GroundingTrace value={answer.grounding} t={t} />}
+          {!simple && mode === "debug" && <GroundingTrace value={answer.grounding} t={t} />}
         </div>
       )}
-      {mode !== "expert" && history.length > 0 && (
+      {!simple && mode !== "expert" && history.length > 0 && (
         <div className="ai-summary-list">
           <strong>{t("answerHistory")}</strong>
           {history.slice(0, 5).map((item) => <HistoryRow item={item} onReplay={replay} t={t} key={item.id} />)}
@@ -117,7 +124,7 @@ export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
                 {hit.target_table ? ` · ${hit.target_table}` : ""}
                 {hit.page ? ` · page ${hit.page}` : ""}
                 {hit.sheet_name ? ` · ${hit.sheet_name}` : ""}
-                {` · ${hit.score.toFixed(2)}`}
+                {!simple ? ` · ${hit.score.toFixed(2)}` : ""}
               </small>
             </div>
             <p>{hit.text || "No text in block."}</p>

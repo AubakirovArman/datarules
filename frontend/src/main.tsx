@@ -19,6 +19,7 @@ import "@styles/decision-workbench.css";
 import "@styles/readiness-action.css";
 import "@styles/action-focus.css";
 import "@styles/workflow-layout.css";
+import "@styles/simple-flow.css";
 import "@styles/text-safety.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

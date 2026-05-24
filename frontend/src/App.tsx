@@ -5,7 +5,7 @@ import { DatasetsPage } from "@pages/DatasetsPage";
 import { FlowPage } from "@pages/FlowPage";
 import { SettingsPage } from "@pages/SettingsPage";
 import { api } from "@shared/api";
-import { extraCopy } from "@shared/i18n/routing";
+import { extraCopy } from "@shared/i18n/simple";
 import { copy, type Language } from "@shared/i18n";
 
 import type { AppPage } from "@app/AppHeader";
