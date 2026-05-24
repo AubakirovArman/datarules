@@ -1,4 +1,5 @@
 import type { DocumentSummary, LoadPlan, SchemaProposal } from "@shared/types";
+import { isDataRulesManagedColumn } from "@shared/managedColumns";
 import type { SimpleFlowProps, SimpleStep } from "./types";
 
 export type DestinationMode = "new" | "existing" | "analysis_only";
@@ -41,11 +42,14 @@ export function suggestedTable(proposals: SchemaProposal[]) {
 export function suggestedColumns(proposals: SchemaProposal[]) {
   const table = firstTable(proposals[0]);
   const columns = Array.isArray(table.columns) ? table.columns : [];
-  return columns.map(objectValue).map((item) => ({
-    name: String(item.name ?? "field"),
-    type: String(item.type ?? "text"),
-    required: Boolean(item.required),
-  }));
+  return columns
+    .map(objectValue)
+    .map((item) => ({
+      name: String(item.name ?? "field"),
+      type: String(item.type ?? "text"),
+      required: Boolean(item.required),
+    }))
+    .filter((item) => item.name && !isDataRulesManagedColumn(item.name));
 }
 
 export function schemaJsonFromProposal(proposal?: SchemaProposal) {

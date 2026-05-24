@@ -14,6 +14,7 @@ import type {
   TableCatalog,
   ReadinessAction,
 } from "@shared/types";
+import { isDataRulesManagedColumn } from "@shared/managedColumns";
 import { GuidedStageNav, type FlowStep } from "./GuidedStageNav";
 import { JobProgress } from "./JobProgress";
 import { LoadPane } from "@features/load/LoadPane";
@@ -243,6 +244,7 @@ function normalizeColumn(column: unknown) {
   const value = column as Record<string, unknown>;
   const name = safeColumnName(String(value.name ?? ""));
   if (!name) return undefined;
+  if (isDataRulesManagedColumn(name)) return undefined;
   return { name, type: String(value.type ?? "text"), required: Boolean(value.required) };
 }
 
