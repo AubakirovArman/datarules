@@ -6,6 +6,7 @@ import type { SimpleFlowProps, SimpleStep } from "./types";
 import {
   DestinationMode,
   latestPlan,
+  planMatches,
   schemaJsonFromProposal,
   suggestedColumns,
   suggestedTable,
@@ -18,13 +19,17 @@ type Props = {
 
 export function SimpleDestinationPanel({ flow, onStep }: Props) {
   const defaultConnection = flow.connections.find((item) => item.is_internal) ?? flow.connections[0];
-  const plan = latestPlan(flow.loadPlans);
-  const [localPlan, setLocalPlan] = useState<LoadPlan>();
-  const activePlan = localPlan ?? plan;
   const [mode, setMode] = useState<DestinationMode>("new");
   const [connectionId, setConnectionId] = useState(defaultConnection?.id ?? "");
   const [schema, setSchema] = useState(defaultConnection?.default_schema ?? "public");
   const [table, setTable] = useState(suggestedTable(flow.proposals));
+  const plan = flow.loadPlans.find((item) => planMatches(item, mode, schema, table)) ?? latestPlan(flow.loadPlans);
+  const [localPlan, setLocalPlan] = useState<LoadPlan>();
+  const activePlan = planMatches(localPlan, mode, schema, table)
+    ? localPlan
+    : planMatches(plan, mode, schema, table)
+      ? plan
+      : undefined;
   const [existingKey, setExistingKey] = useState("");
   const [busy, setBusy] = useState("");
   const existingTables = useMemo(() => flow.tables.map(tableOption), [flow.tables]);
@@ -104,7 +109,7 @@ export function SimpleDestinationPanel({ flow, onStep }: Props) {
         </div>
       </details>
       <PreviewSummary plan={activePlan} t={flow.t} onConfirm={confirmLoad} busy={busy} />
-      {!activePlan && (
+      {(!activePlan || activePlan.status === "blocked") && (
         <div className="simple-actions">
           <button disabled={Boolean(busy) || (mode !== "analysis_only" && !table.trim())} onClick={buildPreview} type="button">
             <Eye size={16} />
@@ -146,14 +151,17 @@ function ColumnChips({ columns }: { columns: Array<{ name: string }> }) {
 function PreviewSummary({ plan, t, onConfirm, busy }: { plan?: LoadPlan; t: SimpleFlowProps["t"]; onConfirm: () => void; busy: string }) {
   if (!plan) return null;
   const loaded = plan.status === "loaded";
+  const blocker = loadBlocker(plan);
   return (
     <div className={loaded ? "simple-success" : "simple-card"}>
       <strong>{loaded ? t("loadComplete") : t("reviewRowsAndLoad")}</strong>
+      <span className={`status ${plan.status}`}>{t(plan.status)}</span>
       <div className="simple-metrics">
         <Metric label={t("rows")} value={plan.preview_rows.length} />
         <Metric label={t("validation")} value={plan.validation_issues.length} />
         <Metric label={t("targetTable")} value={`${plan.schema_name}.${plan.target_table}`} />
       </div>
+      {blocker && <div className="error-banner">{t(blocker.code)}{blocker.count ? ` · ${blocker.count}` : ""}</div>}
       <details className="simple-details">
         <summary>{t("viewRows")}</summary>
         <PreviewRows rows={plan.preview_rows} />
@@ -174,6 +182,12 @@ function PreviewRows({ rows }: { rows: Array<Record<string, unknown>> }) {
       {rows.slice(0, 5).map((row, index) => <code key={String(row.row_id ?? index)}>{JSON.stringify(row.field_values ?? row).slice(0, 260)}</code>)}
     </div>
   );
+}
+
+function loadBlocker(plan: LoadPlan) {
+  return (plan.validation_issues ?? []).find((issue) => issue.severity === "error") as
+    | { code: string; count?: number }
+    | undefined;
 }
 
 async function prepareAiPlan(flow: SimpleFlowProps, mode: DestinationMode) {

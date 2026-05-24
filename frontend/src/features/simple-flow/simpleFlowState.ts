@@ -52,6 +52,7 @@ export function schemaJsonFromProposal(proposal?: SchemaProposal) {
   const table = firstTable(proposal);
   const columns = suggestedColumns(proposal ? [proposal] : []);
   return {
+    schema_source: "user_supplied_schema",
     description: String(table.purpose ?? proposal?.proposal_json.dataset_summary ?? ""),
     target_columns: columns,
     source_references_required: true,
@@ -64,6 +65,12 @@ export function latestPlan(plans: LoadPlan[]) {
 
 export function planReadyForAgent(plan?: LoadPlan) {
   return Boolean(plan?.agent_preparation_json?.ready_for_agent) || plan?.status === "loaded";
+}
+
+export function planMatches(plan: LoadPlan | undefined, mode: DestinationMode, schema: string, table: string) {
+  if (!plan) return false;
+  const target = mode === "analysis_only" ? "analysis_only" : table.trim();
+  return plan.target_mode === mode && plan.schema_name === schema && plan.target_table === target;
 }
 
 function objectValue(value: unknown): Record<string, unknown> {
