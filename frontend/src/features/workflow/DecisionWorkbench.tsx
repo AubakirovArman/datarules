@@ -2,8 +2,9 @@ import { Bot, CheckCircle2, DatabaseZap, FileUp, Route, Search, Table2 } from "l
 import { useState } from "react";
 import { api } from "@shared/api";
 import type { DocumentFile, DocumentReview, DocumentSummary, LoadPlan, SchemaProposal } from "@shared/types";
+import type { WorkflowStage } from "./workflowState";
 
-type Step = "upload" | "analyze" | "summary" | "destination" | "load" | "search";
+type Step = WorkflowStage;
 
 type Props = {
   datasetId?: string;
@@ -64,19 +65,19 @@ function decisionState(props: Props) {
   const latestPlan = props.loadPlans[0];
   const agentReady = props.loadPlans.some((plan) => Boolean(plan.agent_preparation_json?.ready_for_agent));
   if (!props.files.length) return row("decisionOpenUpload", "decisionUploadBlocked", "decisionOpenUpload", "upload", FileUp);
-  if (!props.summaries.length) return row("decisionOpenAnalyze", "decisionAnalysisBlocked", "decisionOpenAnalyze", "analyze", Bot);
+  if (!props.summaries.length) return row("decisionOpenAnalyze", "decisionAnalysisBlocked", "decisionOpenAnalyze", "extraction", Bot);
   if (pendingRoutes.length) {
-    return row("decisionAcceptRoutes", "decisionRouteBlocked", "decisionAcceptRoutes", "destination", Route, "accept");
+    return row("decisionAcceptRoutes", "decisionRouteBlocked", "decisionAcceptRoutes", "routing", Route, "accept");
   }
   if (!approvedSchema) {
     const action = props.proposals.length ? "approve_schema" : undefined;
-    return row("decisionApproveSchema", "decisionSchemaBlocked", "decisionApproveSchema", "destination", Table2, action);
+    return row("decisionApproveSchema", "decisionSchemaBlocked", "decisionApproveSchema", "schema", Table2, action);
   }
   if (!latestPlan || latestPlan.status !== "loaded") {
-    return row("decisionOpenLoad", "decisionLoadBlocked", "decisionOpenLoad", "load", DatabaseZap);
+    return row("decisionOpenLoad", "decisionLoadBlocked", "decisionOpenLoad", "preview", DatabaseZap);
   }
-  if (!agentReady) return row("decisionOpenLoad", "decisionIndexBlocked", "decisionOpenLoad", "load", DatabaseZap);
-  return row("decisionOpenSearch", "decisionReady", "decisionOpenSearch", "search", Search);
+  if (!agentReady) return row("decisionOpenLoad", "decisionIndexBlocked", "decisionOpenLoad", "retrieval", DatabaseZap);
+  return row("decisionOpenSearch", "decisionReady", "decisionOpenSearch", "retrieval", Search);
 }
 
 function row(
@@ -118,10 +119,10 @@ function stageRows(props: Props) {
   const plan = props.loadPlans[0];
   return [
     stage("decisionStepAnalysis", "summary", props.summaries.length > 0, `${props.summaries.length}/${props.files.length}`, Bot),
-    stage("decisionStepRouting", "destination", props.reviews.length > 0 && confirmed === props.reviews.length, `${confirmed}/${props.reviews.length}`, Route),
-    stage("decisionStepSchema", "destination", props.proposals.some((item) => item.status === "approved"), String(props.proposals.length), Table2),
-    stage("decisionStepLoad", "load", Boolean(plan?.status === "loaded"), plan?.status ?? "pending", DatabaseZap),
-    stage("decisionStepAgent", "search", props.loadPlans.some((item) => Boolean(item.agent_preparation_json?.ready_for_agent)), props.loadPlans.length ? "agent" : "pending", Search),
+    stage("decisionStepRouting", "routing", props.reviews.length > 0 && confirmed === props.reviews.length, `${confirmed}/${props.reviews.length}`, Route),
+    stage("decisionStepSchema", "schema", props.proposals.some((item) => item.status === "approved"), String(props.proposals.length), Table2),
+    stage("decisionStepLoad", "materialization", Boolean(plan?.status === "loaded"), plan?.status ?? "pending", DatabaseZap),
+    stage("decisionStepAgent", "retrieval", props.loadPlans.some((item) => Boolean(item.agent_preparation_json?.ready_for_agent)), props.loadPlans.length ? "agent" : "pending", Search),
   ];
 }
 

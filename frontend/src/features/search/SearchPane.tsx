@@ -14,8 +14,11 @@ type Props = {
   t: (key: string) => string;
 };
 
+type SearchMode = "ask" | "expert" | "debug";
+
 export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
-  const [query, setQuery] = useState("CAPEX");
+  const [mode, setMode] = useState<SearchMode>("ask");
+  const [query, setQuery] = useState("");
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [answer, setAnswer] = useState<AskResponse | undefined>();
   const [history, setHistory] = useState<AnswerHistory[]>([]);
@@ -64,28 +67,41 @@ export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
       <div className="panel-head">
         <h2>{t("search")}</h2>
       </div>
-      <QueryGuide datasetId={datasetId} t={t} />
-      <StructuredSqlPane datasetId={datasetId} disabled={disabled} t={t} />
-      <GoldenChecksPanel datasetId={datasetId} checks={golden} disabled={disabled || busy} onChange={setGolden} t={t} />
-      <form className="search-form" onSubmit={(event) => submit(event)}>
+      <div className="segmented">
+        <button className={mode === "ask" ? "active" : ""} onClick={() => setMode("ask")} type="button">{t("askAgent")}</button>
+        <button className={mode === "expert" ? "active" : ""} onClick={() => setMode("expert")} type="button">{t("structuredSql")}</button>
+        <button className={mode === "debug" ? "active" : ""} onClick={() => setMode("debug")} type="button">Debug</button>
+      </div>
+      {mode !== "debug" && <QueryGuide datasetId={datasetId} t={t} />}
+      {(mode === "expert" || mode === "debug") && <StructuredSqlPane datasetId={datasetId} disabled={disabled} t={t} />}
+      {mode === "debug" && <GoldenChecksPanel datasetId={datasetId} checks={golden} disabled={disabled || busy} onChange={setGolden} t={t} />}
+      <form className="search-form" onSubmit={(event) => submit(event, mode === "ask" ? "ask" : "search")}>
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("searchPlaceholder")} />
         <button disabled={disabled || busy || !query.trim()} type="submit">
           <Search size={16} />
-          <span>{t("search")}</span>
+          <span>{mode === "ask" ? t("askAgent") : t("search")}</span>
         </button>
-        <button disabled={disabled || busy || !query.trim()} onClick={(event) => submit(event, "ask")} type="button">
+        {mode !== "ask" && (
+          <button disabled={disabled || busy || !query.trim()} onClick={(event) => submit(event, "ask")} type="button">
+            <Search size={16} />
+            <span>{t("askAgent")}</span>
+          </button>
+        )}
+        {mode === "ask" && (
+          <button disabled={disabled || busy || !query.trim()} onClick={(event) => submit(event, "search")} type="button">
           <Search size={16} />
-          <span>{t("askAgent")}</span>
-        </button>
+            <span>{t("search")}</span>
+          </button>
+        )}
       </form>
       {answer && (
         <div className="ai-summary-list">
           <strong>{t("answer")} · {answer.confidence} · {answer.model_source} · {answer.prompt_version}</strong>
           <span>{answer.answer}</span>
-          <GroundingTrace value={answer.grounding} t={t} />
+          {mode === "debug" && <GroundingTrace value={answer.grounding} t={t} />}
         </div>
       )}
-      {history.length > 0 && (
+      {mode !== "expert" && history.length > 0 && (
         <div className="ai-summary-list">
           <strong>{t("answerHistory")}</strong>
           {history.slice(0, 5).map((item) => <HistoryRow item={item} onReplay={replay} t={t} key={item.id} />)}
@@ -106,10 +122,10 @@ export function SearchPane({ datasetId, disabled, onSearch, onAsk, t }: Props) {
             </div>
             <p>{hit.text || "No text in block."}</p>
             {typeof hit.metadata?.embedding_status === "string" && (
-              <code>{`embedding: ${String(hit.metadata.embedding_status)}`}</code>
+              mode === "debug" && <code>{`embedding: ${String(hit.metadata.embedding_status)}`}</code>
             )}
-            <FusionTrace value={hit.metadata?.fusion} />
-            <RerankTrace value={hit.metadata?.rerank} />
+            {mode === "debug" && <FusionTrace value={hit.metadata?.fusion} />}
+            {mode === "debug" && <RerankTrace value={hit.metadata?.rerank} />}
           </div>
         ))}
         {hits.length === 0 && <div className="empty">{t("noResults")}</div>}

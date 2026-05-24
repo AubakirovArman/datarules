@@ -25,6 +25,7 @@ import { SummaryPane } from "@features/summary/SummaryPane";
 import { UploadPane } from "@features/upload/UploadPane";
 import { WorkflowActionCenter } from "./WorkflowActionCenter";
 import { WorkflowInspector } from "./WorkflowInspector";
+import { normalizeStage, stageFromAction, workflowStages } from "./workflowState";
 
 type Props = {
   selected: boolean;
@@ -70,14 +71,7 @@ type Step = FlowStep;
 export function GuidedFlow(props: Props) {
   const [step, setStep] = useState<Step>("upload");
   const [focusCode, setFocusCode] = useState("");
-  const tabs: Array<{ id: Step; label: string }> = [
-    { id: "upload", label: props.t("upload") },
-    { id: "analyze", label: props.t("analyze") },
-    { id: "summary", label: props.t("documentSummary") },
-    { id: "destination", label: props.t("destination") },
-    { id: "load", label: props.t("previewLoad") },
-    { id: "search", label: props.t("search") },
-  ];
+  const tabs = workflowStages.map((id) => ({ id, label: stageLabel(id, props.t) }));
   const readinessKey = [
     props.files.length,
     props.job?.status,
@@ -89,7 +83,7 @@ export function GuidedFlow(props: Props) {
   ].join(":");
 
   useEffect(() => {
-    if (step === "analyze" && ["waiting_review", "completed"].includes(props.job?.status ?? "")) {
+    if (step === "extraction" && ["waiting_review", "completed"].includes(props.job?.status ?? "")) {
       setStep("summary");
     }
   }, [props.job?.status, step]);
@@ -97,7 +91,7 @@ export function GuidedFlow(props: Props) {
   async function startAnalysis() {
     const nextJob = await props.onStart();
     if (nextJob) {
-      setStep("analyze");
+      setStep("extraction");
     }
     return nextJob;
   }
@@ -146,7 +140,7 @@ export function GuidedFlow(props: Props) {
             t={props.t}
           />
         )}
-        {step === "analyze" && <JobProgress job={props.job} events={props.events} t={props.t} />}
+        {step === "extraction" && <JobProgress job={props.job} events={props.events} t={props.t} />}
         {step === "summary" && (
           <SummaryPane
             datasetId={props.datasetId}
@@ -155,7 +149,7 @@ export function GuidedFlow(props: Props) {
             t={props.t}
           />
         )}
-        {step === "destination" && (
+        {step === "routing" && (
           <div className="flow-stack">
             <ReviewPane
               datasetId={props.datasetId}
@@ -165,6 +159,10 @@ export function GuidedFlow(props: Props) {
               onConfirm={props.onConfirmReview}
               t={props.t}
             />
+          </div>
+        )}
+        {step === "schema" && (
+          <div className="flow-stack">
             <SchemaPane
               datasetId={props.datasetId}
               proposals={props.proposals}
@@ -175,7 +173,7 @@ export function GuidedFlow(props: Props) {
             <SchemaChatPane disabled={props.disabled} onAsk={props.onSchemaChat} onUseProposal={useChatProposal} t={props.t} />
           </div>
         )}
-        {step === "load" && (
+        {step === "preview" && (
           <LoadPane
             connections={props.connections}
             files={props.files}
@@ -186,10 +184,26 @@ export function GuidedFlow(props: Props) {
             onCreatePlan={props.onCreateLoadPlan}
             onUpdateRows={props.onUpdateLoadPlanRows}
             onConfirm={props.onConfirmLoadPlan}
+            view="preview"
             t={props.t}
           />
         )}
-        {step === "search" && <SearchPane datasetId={props.datasetId} disabled={props.disabled} onSearch={props.onSearch} onAsk={props.onAsk} t={props.t} />}
+        {step === "materialization" && (
+          <LoadPane
+            connections={props.connections}
+            files={props.files}
+            tables={props.tables}
+            reviews={props.reviews}
+            plans={props.loadPlans}
+            datasetId={props.datasetId}
+            onCreatePlan={props.onCreateLoadPlan}
+            onUpdateRows={props.onUpdateLoadPlanRows}
+            onConfirm={props.onConfirmLoadPlan}
+            view="materialization"
+            t={props.t}
+          />
+        )}
+        {step === "retrieval" && <SearchPane datasetId={props.datasetId} disabled={props.disabled} onSearch={props.onSearch} onAsk={props.onAsk} t={props.t} />}
       </div>
       <WorkflowInspector
         datasetId={props.datasetId}
@@ -210,7 +224,7 @@ export function GuidedFlow(props: Props) {
 
 function handleReadinessNavigateFactory(setStep: (step: Step) => void, setFocusCode: (code: string) => void) {
   return (value: string, action?: ReadinessAction) => {
-    setStep(goToStep(value));
+    setStep(action ? stageFromAction(action) : normalizeStage(value));
     setFocusCode(action?.code ?? "");
   };
 }
@@ -222,13 +236,6 @@ function schemaFromProposal(proposal: Record<string, unknown>) {
     target_columns: columns.map(normalizeColumn).filter(Boolean),
     source_references_required: true,
   };
-}
-
-function goToStep(value: string) {
-  if (["upload", "analyze", "summary", "destination", "load", "search"].includes(value)) {
-    return value as Step;
-  }
-  return "upload";
 }
 
 function normalizeColumn(column: unknown) {
@@ -245,4 +252,18 @@ function safeTableName(value: string) {
 
 function safeColumnName(value: string) {
   return value.trim().toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 60);
+}
+
+function stageLabel(step: Step, t: Props["t"]) {
+  const keys: Record<Step, string> = {
+    upload: "upload",
+    extraction: "analyze",
+    summary: "documentSummary",
+    routing: "destination",
+    schema: "schema",
+    preview: "preview",
+    materialization: "loadData",
+    retrieval: "search",
+  };
+  return t(keys[step]);
 }

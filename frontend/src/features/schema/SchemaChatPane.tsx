@@ -48,11 +48,15 @@ export function SchemaChatPane({ disabled, onAsk, onUseProposal, t }: Props) {
         <div className="proposal-box">
           <strong>{t("proposal")}: {String(proposal.table_name ?? "table")}</strong>
           <small>{t("chatContext")}: {formatContext(proposal.context_usage)}</small>
-          <code>{JSON.stringify(proposal.columns ?? proposal, null, 2)}</code>
+          <ColumnPreview columns={proposal.columns} t={t} />
           {Array.isArray(proposal.identifier_warnings) && proposal.identifier_warnings.length > 0 && (
             <small>{t("schemaWarnings")}: {proposal.identifier_warnings.length}</small>
           )}
           <small>{t("nextStep")}: {String(proposal.next_confirmation_step ?? "")}</small>
+          <details className="developer-details">
+            <summary>JSON</summary>
+            <code>{JSON.stringify(proposal, null, 2)}</code>
+          </details>
           {onUseProposal && (
             <button disabled={busy} onClick={() => onUseProposal(proposal)}>
               <span>{t("buildPreview")}</span>
@@ -76,8 +80,32 @@ export function SchemaChatPane({ disabled, onAsk, onUseProposal, t }: Props) {
   );
 }
 
+function ColumnPreview({ columns, t }: { columns: unknown; t: Props["t"] }) {
+  if (!Array.isArray(columns) || columns.length === 0) {
+    return <small>{t("fields")}: 0</small>;
+  }
+  return (
+    <div className="schema-column-preview">
+      <strong>{t("fields")}</strong>
+      {columns.slice(0, 12).map((column, index) => {
+        const item = objectValue(column);
+        return (
+          <span key={`${String(item.name ?? "field")}-${index}`}>
+            {String(item.name ?? "field")} · {String(item.type ?? "text")}
+            {item.required ? ` · ${t("required")}` : ""}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function formatContext(value: unknown) {
   if (!value || typeof value !== "object") return "summary 0 · snippets 0 · tables 0";
   const item = value as Record<string, unknown>;
   return `summary ${item.document_summaries ?? 0} · snippets ${item.snippets ?? 0} · tables ${item.known_tables ?? 0} · ${item.language ?? ""}`;
+}
+
+function objectValue(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }

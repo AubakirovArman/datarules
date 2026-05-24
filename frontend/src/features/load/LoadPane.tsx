@@ -2,16 +2,9 @@ import { DatabaseZap, PlayCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@shared/api";
 import type { DbConnection, DocumentFile, DocumentReview, LoadPlan, TableCatalog } from "@shared/types";
-import { AgentReadinessReport } from "./AgentReadinessReport";
-import { LoadedRowsBrowser } from "./LoadedRowsBrowser";
 import { LoadDocumentPicker } from "./LoadDocumentPicker";
-import { LoadIssues } from "./LoadIssues";
-import { LoadPlanActions } from "./LoadPlanActions";
-import { LoadPlanTimeline } from "./LoadPlanTimeline";
+import { LoadPlanWorkspace, type LoadPaneView } from "./LoadPlanWorkspace";
 import { LoadPreflight } from "./LoadPreflight";
-import { LoadQuarantinePanel } from "./LoadQuarantinePanel";
-import { LoadReport } from "./LoadReport";
-import { PreviewEditor } from "./PreviewEditor";
 
 type Props = {
   connections: DbConnection[];
@@ -31,6 +24,7 @@ type Props = {
   ) => Promise<LoadPlan | undefined>;
   onUpdateRows: (planId: string, rows: LoadPlan["preview_rows"]) => Promise<void>;
   onConfirm: (planId: string) => Promise<void>;
+  view?: LoadPaneView;
   t: (key: string) => string;
 };
 
@@ -42,7 +36,19 @@ type Destination = {
   label: string;
 };
 
-export function LoadPane({ connections, files, tables, reviews, plans, datasetId, onCreatePlan, onUpdateRows, onConfirm, t }: Props) {
+export function LoadPane({
+  connections,
+  files,
+  tables,
+  reviews,
+  plans,
+  datasetId,
+  onCreatePlan,
+  onUpdateRows,
+  onConfirm,
+  view = "preview",
+  t,
+}: Props) {
   const destinations = useMemo(() => tableOptions(tables, reviews), [tables, reviews]);
   const defaultConnection = connections.find((item) => item.is_internal) ?? connections[0];
   const first = destinations[0];
@@ -163,7 +169,17 @@ export function LoadPane({ connections, files, tables, reviews, plans, datasetId
         </button>
       </div>
       <LoadDocumentPicker files={files} selectedIds={documentIds} onChange={setDocumentIds} t={t} />
-      {plan && <PlanPreview plan={plan} preflightBlocked={preflightBlocked} onPlanUpdated={setLocalPlan} onUpdateRows={onUpdateRows} onConfirm={onConfirm} t={t} />}
+      {plan && (
+        <LoadPlanWorkspace
+          plan={plan}
+          preflightBlocked={preflightBlocked}
+          view={view}
+          onPlanUpdated={setLocalPlan}
+          onUpdateRows={onUpdateRows}
+          onConfirm={onConfirm}
+          t={t}
+        />
+      )}
     </section>
   );
 
@@ -198,42 +214,6 @@ function firstTableName(version: Record<string, unknown>) {
   const tables = Array.isArray(schema?.tables) ? schema.tables : [];
   const table = tables[0] as Record<string, unknown> | undefined;
   return String(table?.name ?? table?.table_name ?? "");
-}
-
-function PlanPreview({
-  plan,
-  preflightBlocked,
-  onUpdateRows,
-  onConfirm,
-  onPlanUpdated,
-  t,
-}: {
-  plan: LoadPlan;
-  preflightBlocked: boolean;
-  onUpdateRows: Props["onUpdateRows"];
-  onConfirm: Props["onConfirm"];
-  onPlanUpdated: (plan: LoadPlan) => void;
-  t: Props["t"];
-}) {
-  const [dirty, setDirty] = useState(false);
-  return (
-    <div className="load-preview">
-      <div className="load-status">
-        <h3>{plan.schema_name}.{plan.target_table}</h3>
-        <span className={`status ${plan.status}`}>{t(plan.status)}</span>
-        <small>{plan.preview_rows.length} {t("rows")}</small>
-      </div>
-      <AgentReadinessReport value={plan.agent_preparation_json} t={t} />
-      <LoadReport planId={plan.id} refreshKey={plan.updated_at} t={t} />
-      <LoadedRowsBrowser planId={plan.id} enabled={plan.status === "loaded" && plan.target_mode !== "analysis_only"} refreshKey={plan.updated_at} t={t} />
-      <LoadIssues issues={plan.validation_issues} t={t} />
-      <LoadQuarantinePanel planId={plan.id} refreshKey={plan.updated_at} t={t} />
-      <LoadPlanTimeline events={plan.events} />
-      <PreviewEditor plan={plan} onSave={(rows) => onUpdateRows(plan.id, rows)} onDirtyChange={setDirty} t={t} />
-      {dirty && <small className="load-save-warning">{t("savePreviewBeforeLoad")}</small>}
-      <LoadPlanActions plan={plan} preflightBlocked={preflightBlocked} dirty={dirty} onConfirm={onConfirm} onPlanUpdated={onPlanUpdated} t={t} />
-    </div>
-  );
 }
 
 function tableOptions(tables: TableCatalog[], reviews: DocumentReview[]) {

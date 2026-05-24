@@ -102,13 +102,13 @@ function ReviewCard({
   }
 
   return (
-    <div className="review-card">
-      <div className="review-head">
+    <details className="review-card" open={review.status !== "confirmed"}>
+      <summary className="review-head">
         <Route size={16} />
         <strong>{review.file_name ?? review.document_id}</strong>
         <span className={`status ${review.status}`}>{review.status}</span>
-      </div>
-      <small>{review.reason}</small>
+      </summary>
+      <small className="route-reason">{review.reason}</small>
       {summary && <RouteSummary summary={summary} t={t} />}
       <div className="route-pair">
         <span>{t("recommendedPair")}</span>
@@ -141,7 +141,7 @@ function ReviewCard({
         <Check size={16} />
         <span>{t("confirmChoice")}</span>
       </button>
-    </div>
+    </details>
   );
 }
 

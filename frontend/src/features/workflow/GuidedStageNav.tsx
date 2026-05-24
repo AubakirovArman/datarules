@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, Bot, DatabaseZap, FileUp, Route, Search, Table2 } from "lucide-react";
+import type { WorkflowStage } from "./workflowState";
 
-export type FlowStep = "upload" | "analyze" | "summary" | "destination" | "load" | "search";
+export type FlowStep = WorkflowStage;
 
 type Tab = {
   id: FlowStep;
@@ -60,11 +61,13 @@ export function GuidedStageNav({ tabs, step, selected, onStep, t }: Props) {
 function stageMeta(step: FlowStep, t: Props["t"]) {
   const meta = {
     upload: ["upload", "actionUploadDetail", FileUp],
-    analyze: ["analyze", "actionAnalyzeDetail", Bot],
+    extraction: ["analyze", "actionAnalyzeDetail", Bot],
     summary: ["documentSummary", "routeSummary", Bot],
-    destination: ["destination", "actionReviewDetail", Route],
-    load: ["previewLoad", "loadHint", DatabaseZap],
-    search: ["search", "actionSearchDetail", Search],
+    routing: ["destination", "actionReviewDetail", Route],
+    schema: ["schema", "actionSchemaDetail", Table2],
+    preview: ["preview", "loadHint", DatabaseZap],
+    materialization: ["loadData", "actionLoadDetail", DatabaseZap],
+    retrieval: ["search", "actionSearchDetail", Search],
   } satisfies Record<FlowStep, [string, string, typeof FileUp]>;
   const [title, detail, icon] = meta[step] ?? ["workflow", "nextStep", Table2];
   return { title: t(title), detail: t(detail), icon };

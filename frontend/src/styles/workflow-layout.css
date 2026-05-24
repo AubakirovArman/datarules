@@ -238,6 +238,43 @@
   max-inline-size: 560px;
 }
 
+.review-card > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.review-card > summary::-webkit-details-marker {
+  display: none;
+}
+
+.review-card:not([open]) {
+  gap: 0;
+}
+
+.route-reason {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.schema-column-preview,
+.developer-details {
+  display: grid;
+  gap: 6px;
+}
+
+.schema-column-preview span {
+  border: 1px solid rgba(0, 240, 255, 0.16);
+  border-radius: 3px;
+  color: var(--text-main);
+  padding: 7px 9px;
+}
+
+.developer-details > summary {
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: "JetBrains Mono", monospace;
+}
+
 @container workspace (inline-size < 820px) {
   .workflow-action,
   .stage-console-head,

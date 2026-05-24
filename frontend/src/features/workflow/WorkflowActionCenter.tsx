@@ -2,8 +2,10 @@ import { Bot, DatabaseZap, FileUp, PlayCircle, Route, Search, Table2 } from "luc
 import { useEffect, useState } from "react";
 import { api } from "@shared/api";
 import type { DatasetReadiness, DocumentFile, DocumentReview, DocumentSummary, Job, LoadPlan, ReadinessAction, SchemaProposal } from "@shared/types";
+import type { WorkflowStage } from "./workflowState";
+import { normalizeStage, stageFromAction } from "./workflowState";
 
-type Step = "upload" | "analyze" | "summary" | "destination" | "load" | "search";
+type Step = WorkflowStage;
 
 type Props = {
   selected: boolean;
@@ -82,7 +84,7 @@ function readinessAction(props: Props, readiness?: DatasetReadiness): Action | u
       item.title_key,
       item.detail_key,
       item.cta_key,
-      stepValue(item.step),
+      stageFromAction(item),
       iconForAction(item),
       item.code === "wait_for_summary",
       item.code === "run_extraction" ? props.onStart : undefined,
@@ -100,15 +102,16 @@ function nextAction(props: Props): Action {
   const loaded = props.loadPlans.some((plan) => plan.status === "loaded");
   const agentReady = props.loadPlans.some((plan) => Boolean(plan.agent_preparation_json?.ready_for_agent));
   if (!props.files.length) return action(props, "actionUpload", "actionUploadDetail", "actionButtonUpload", "upload", FileUp);
-  if (running) return action(props, "actionAnalyzing", "actionAnalyzingDetail", "actionButtonAnalyzing", "analyze", Bot, true);
-  if (!analyzed) return action(props, "actionAnalyze", "actionAnalyzeDetail", "actionButtonAnalyze", "analyze", Bot, false, props.onStart);
-  if (!confirmedRoutes) return action(props, "actionReview", "actionReviewDetail", "actionButtonReview", "destination", Route);
-  if (!approvedSchema) return action(props, "actionSchema", "actionSchemaDetail", "actionButtonSchema", "destination", Table2);
+  if (running) return action(props, "actionAnalyzing", "actionAnalyzingDetail", "actionButtonAnalyzing", "extraction", Bot, true);
+  if (!analyzed) return action(props, "actionAnalyze", "actionAnalyzeDetail", "actionButtonAnalyze", "extraction", Bot, false, props.onStart);
+  if (!confirmedRoutes) return action(props, "actionReview", "actionReviewDetail", "actionButtonReview", "routing", Route);
+  if (!approvedSchema) return action(props, "actionSchema", "actionSchemaDetail", "actionButtonSchema", "schema", Table2);
   if (!latestPlan || latestPlan.status !== "loaded") {
-    return action(props, "actionLoad", "actionLoadDetail", "actionButtonLoad", "load", DatabaseZap);
+    const target = latestPlan?.preview_rows.length ? "materialization" : "preview";
+    return action(props, "actionLoad", "actionLoadDetail", "actionButtonLoad", target, DatabaseZap);
   }
-  if (loaded && !agentReady) return action(props, "actionIndex", "actionIndexDetail", "actionButtonIndex", "load", DatabaseZap);
-  return action(props, "actionSearch", "actionSearchDetail", "actionButtonSearch", "search", Search);
+  if (loaded && !agentReady) return action(props, "actionIndex", "actionIndexDetail", "actionButtonIndex", "retrieval", DatabaseZap);
+  return action(props, "actionSearch", "actionSearchDetail", "actionButtonSearch", "retrieval", Search);
 }
 
 function action(
@@ -139,16 +142,13 @@ async function runAction(action: Action, navigate: Props["onNavigate"]) {
   navigate(action.step, action.source);
 }
 
-function stepValue(value: string): Step {
-  return ["upload", "analyze", "summary", "destination", "load", "search"].includes(value) ? value as Step : "upload";
-}
-
 function iconForAction(item: ReadinessAction) {
-  if (item.step === "upload") return FileUp;
-  if (item.step === "analyze" || item.code === "wait_for_summary") return Bot;
-  if (item.step === "destination" && item.code.includes("schema")) return Table2;
-  if (item.step === "destination") return Route;
-  if (item.step === "load") return DatabaseZap;
+  const step = stageFromAction(item) ?? normalizeStage(item.step);
+  if (step === "upload") return FileUp;
+  if (step === "extraction" || step === "summary") return Bot;
+  if (step === "routing") return Route;
+  if (step === "schema") return Table2;
+  if (step === "preview" || step === "materialization") return DatabaseZap;
   return Search;
 }
 
